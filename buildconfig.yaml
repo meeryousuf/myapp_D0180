@@ -1,0 +1,42 @@
+# buildconfig.yaml
+# This BuildConfig defines how to build the Node.js application from source.
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  # The name of the build configuration.
+  name: hello-node
+  labels:
+    app: hello-node
+spec:
+  # The 'triggers' section defines what causes a new build to be created.
+  triggers:
+    # The 'ConfigChange' trigger starts a new build whenever this BuildConfig is updated.
+    - type: ConfigChange
+    # The 'ImageChange' trigger starts a new build when the base image changes.
+    # This is useful for automatically applying security updates from the base image.
+    - type: ImageChange
+      imageChange: {}
+
+  # The 'source' section defines where the application source code is located.
+  source:
+    # We are using a Git repository as the source.
+    type: Git
+    git:
+      # IMPORTANT: Replace this URL with the actual URL of your Git repository.
+      uri: "https://github.com/openshift/nodejs-ex.git"
+
+  # The 'strategy' section defines how to build the application.
+  strategy:
+    # We are using the 'Docker' strategy, which builds from a Dockerfile in the source repo.
+    type: Docker
+    dockerStrategy:
+      # Specifies the path to the Dockerfile within the Git repository.
+      dockerfilePath: Dockerfile
+
+  # The 'output' section defines where to push the built container image.
+  output:
+    to:
+      # The kind of object to push the image to. 'ImageStreamTag' is standard in OpenShift.
+      kind: ImageStreamTag
+      # The name of the ImageStream and the tag to use (e.g., 'hello-node:latest').
+      name: "hello-node:latest"

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-node-app
+  template:
+    metadata:
+      labels:
+        app: hello-node
+    spec:
+      containers:
+        - name: hello-node
+          image: image-registry.openshift-image-registry.svc:5000/openshift/hello-node:latest
+          ports:
+            - containerPort: 3000
